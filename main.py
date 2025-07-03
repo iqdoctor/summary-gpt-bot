@@ -2,14 +2,21 @@ import asyncio
 import os
 import re
 import trafilatura
+from dotenv import load_dotenv
 from litellm import completion
 from duckduckgo_search import AsyncDDGS
 from PyPDF2 import PdfReader
 from concurrent.futures import ThreadPoolExecutor
+
+from sympy import numer, false
 from tqdm import tqdm
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CommandHandler, MessageHandler, CallbackQueryHandler, filters, ApplicationBuilder
 from youtube_transcript_api import YouTubeTranscriptApi
+
+from openai import OpenAI
+
+load_dotenv()
 
 telegram_token = os.environ.get("TELEGRAM_TOKEN", "xxx")
 model = os.environ.get("LLM_MODEL", "gpt-3.5-turbo-16k")
@@ -17,6 +24,13 @@ lang = os.environ.get("TS_LANG", "Taiwanese Mandarin")
 ddg_region = os.environ.get("DDG_REGION", "wt-wt")
 chunk_size = int(os.environ.get("CHUNK_SIZE", 10000))
 allowed_users = os.environ.get("ALLOWED_USERS", "")
+method = os.environ.get("METHOD", "chat").lower()
+
+response_api_client = false
+
+if method == "responses":
+    response_api_client = OpenAI()  # Responses client
+    response_api_client.prev_id = None
 
 def split_user_input(text):
     # Split the input text into paragraphs
@@ -133,15 +147,25 @@ def call_gpt_api(prompt, additional_messages=[]):
     Call GPT API
     """
     try:
-        response = completion(
-        # response = openai.ChatCompletion.create(
-            model=model,
-            messages=additional_messages+[
-                {"role": "user", "content": prompt}
-            ],
+        messages = additional_messages + [{"role": "user", "content": prompt}]
 
-        )
-        message = response.choices[0].message.content.strip()
+        if response_api_client:
+            # print('response_api_client.prev_id', response_api_client.prev_id)
+            response = response_api_client.responses.create(
+                model = model,
+                input = messages,
+                # previous_response_id = response_api_client.prev_id
+            )
+            # response_api_client.prev_id = response.id
+            # print('response.id', response.id)
+            message = response.output_text
+        else:
+            response = completion(
+            # response = openai.ChatCompletion.create(
+                model=model,
+                messages = messages,
+            )
+            message = response.choices[0].message.content.strip()
         return message
     except Exception as e:
         print(f"Error: {e}")
