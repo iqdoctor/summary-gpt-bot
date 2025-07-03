@@ -57,6 +57,7 @@ def scrape_text_from_url(url):
         print(f"Error: {e}")
 
 async def search_results(keywords):
+    # здесь заменить на поиск с учетом наших критериев.
     print(keywords, ddg_region)
     results = await AsyncDDGS().text(keywords, region=ddg_region, safesearch='off', max_results=3)
     return results
@@ -153,10 +154,14 @@ def call_gpt_api(prompt, additional_messages=[]):
             # print('response_api_client.prev_id', response_api_client.prev_id)
             response = response_api_client.responses.create(
                 model = model,
+                prompt={
+                    "id": "pmpt_68660af81f208190ba33e12159f432720dff6cb23e48e63c",
+                    "version": "7"
+                },
                 input = messages,
-                # previous_response_id = response_api_client.prev_id
+                previous_response_id = response_api_client.prev_id
             )
-            # response_api_client.prev_id = response.id
+            response_api_client.prev_id = response.id
             # print('response.id', response.id)
             message = response.output_text
         else:
