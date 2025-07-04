@@ -206,7 +206,7 @@ async def handle(command, update, context):
         if command == 'start':
             await context.bot.send_message(chat_id=chat_id, text="I can summarize text, URLs, PDFs and YouTube video for you.")
         elif command == 'help':
-            await context.bot.send_message(chat_id=chat_id, text="Report bugs here 👉 https://github.com/tpai/summary-gpt-bot/issues", disable_web_page_preview=True)
+            await context.bot.send_message(chat_id=chat_id, text="Report bugs here 👉 https://github.com/iqdoctor/summary-gpt-bot/issues [fork]", disable_web_page_preview=True)
         elif command == 'summarize':
             user_input = update.message.text
             print("user_input=", user_input)
