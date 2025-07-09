@@ -8,6 +8,10 @@ An AI-powered text summarization Telegram bot that generates concise summaries o
 - Supports URLs
 - Supports PDFs
 - Supports YouTube videos (no support for YouTube Shorts)
+- Chat completion API | Responses API switch
+- Responses API Features 
+-- optional treads via response_last_id 
+--  
 
 ## Usage
 
@@ -20,6 +24,8 @@ docker run -d \
     -e TELEGRAM_TOKEN=$YOUR_TG_TOKEN \
     -e TS_LANG=$YOUR_LANGUAGE \
     -e ALLOWED_USERS=<friend1_id>,<friend2_id>,<your_id> \
+    -e RESPONSES_PROMPT_ID=<prompt_id> \
+    -e RESPONSES_PROMPT_VERSION=<prompt_version> \
     tonypai/summary-gpt-bot:latest
 ```
 
@@ -33,18 +39,21 @@ docker run -d \
     -e LLM_MODEL=azure/<your_deployment_name> \
     -e TELEGRAM_TOKEN=$YOUR_TG_TOKEN \
     -e TS_LANG=$YOUR_LANGUAGE \
+    -e RESPONSES_PROMPT_ID=<prompt_id> \
+    -e RESPONSES_PROMPT_VERSION=<prompt_version> \
     tonypai/summary-gpt-bot:latest
 ```
 
 LLM Variables
 
-| Environment Variable | Description |
-|----------------------|-------------|
-| AZURE_API_BASE       | API URL base for AZURE OpenAI API |
-| AZURE_API_KEY        | API key for AZURE OpenAI API |
-| AZURE_API_VERSION    | API version for AZURE OpenAI API |
-| OPENAI_API_KEY       | API key for OpenAI API |
-
+| Environment Variable     | Description                             |
+|--------------------------|-----------------------------------------|
+| AZURE_API_BASE           | API URL base for AZURE OpenAI API       |
+| AZURE_API_KEY            | API key for AZURE OpenAI API            |
+| AZURE_API_VERSION        | API version for AZURE OpenAI API        |
+| OPENAI_API_KEY           | API key for OpenAI API                  |
+| RESPONSES_PROMPT_ID      | Prompt id for OpenAI Responses API      |
+| RESPONSES_PROMPT_VERSION | Prompt version for OpenAI Responses API |
 Bot Variables
 
 | Environment Variable | Description |
