@@ -25,6 +25,9 @@ ddg_region = os.environ.get("DDG_REGION", "wt-wt")
 chunk_size = int(os.environ.get("CHUNK_SIZE", 10000))
 allowed_users = os.environ.get("ALLOWED_USERS", "")
 method = os.environ.get("METHOD", "chat").lower()
+RESPONSES_PROMPT_ID = os.environ.get("RESPONSES_PROMPT_ID", "")
+RESPONSES_PROMPT_VERSION = os.environ.get("RESPONSES_PROMPT_VERSION", "")
+
 
 response_api_client = false
 
@@ -155,8 +158,8 @@ def call_gpt_api(prompt, additional_messages=[]):
             response = response_api_client.responses.create(
                 model = model,
                 prompt={
-                    "id": "pmpt_68660af81f208190ba33e12159f432720dff6cb23e48e63c",
-                    "version": "7"
+                    "id": RESPONSES_PROMPT_ID,
+                    "version": RESPONSES_PROMPT_VERSION
                 },
                 input = messages,
                 previous_response_id = response_api_client.prev_id
